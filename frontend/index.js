@@ -33,6 +33,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         await backend.addPost(title, description, image ? image : null);
         form.reset();
-        await displayPosts();
+        await displayPosts(); // Call displayPosts() after adding a new post
     });
 });
