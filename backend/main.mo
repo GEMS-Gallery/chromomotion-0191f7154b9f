@@ -29,11 +29,13 @@ actor {
     };
 
     posts := Array.append<BlogPost>([newPost], posts);
-    return posts;
+    Debug.print("Post added. Total posts: " # debug_show(posts.size()));
+    return Array.reverse(posts);
   };
 
   // Function to get all posts in reverse chronological order
   public query func getPosts() : async [BlogPost] {
+    Debug.print("Fetching posts. Total posts: " # debug_show(posts.size()));
     Array.reverse(posts)
   };
 }

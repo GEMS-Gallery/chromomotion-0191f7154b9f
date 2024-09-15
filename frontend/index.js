@@ -6,19 +6,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Function to display posts
     async function displayPosts() {
-        const posts = await backend.getPosts();
-        postsContainer.innerHTML = '';
-        posts.forEach(post => {
-            const postElement = document.createElement('div');
-            postElement.className = 'post';
-            postElement.innerHTML = `
-                <h2>${post.title}</h2>
-                <p><em>${new Date(Number(post.date) / 1000000).toLocaleString()}</em></p>
-                <p>${post.description}</p>
-                ${post.image ? `<img src="${post.image}" alt="${post.title}">` : ''}
-            `;
-            postsContainer.appendChild(postElement);
-        });
+        try {
+            const posts = await backend.getPosts();
+            console.log('Fetched posts:', posts);
+            postsContainer.innerHTML = '';
+            posts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.className = 'post';
+                postElement.innerHTML = `
+                    <h2>${post.title}</h2>
+                    <p><em>${new Date(Number(post.date) / 1000000).toLocaleString()}</em></p>
+                    <p>${post.description}</p>
+                    ${post.image ? `<img src="${post.image}" alt="${post.title}">` : ''}
+                `;
+                postsContainer.appendChild(postElement);
+            });
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+        }
     }
 
     // Display initial posts
@@ -31,8 +36,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const description = document.getElementById('description').value;
         const image = document.getElementById('image').value;
 
-        await backend.addPost(title, description, image ? image : null);
-        form.reset();
-        await displayPosts(); // Call displayPosts() after adding a new post
+        try {
+            console.log('Adding new post:', { title, description, image });
+            const updatedPosts = await backend.addPost(title, description, image ? image : null);
+            console.log('Updated posts:', updatedPosts);
+            form.reset();
+            await displayPosts();
+        } catch (error) {
+            console.error('Error adding post:', error);
+        }
     });
 });
